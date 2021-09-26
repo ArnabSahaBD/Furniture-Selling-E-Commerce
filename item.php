@@ -38,8 +38,48 @@
                     $p = $product['id'];
                 }
             }
-            $qry = "INSERT INTO `shopingcart` (`cartId`, `id`, `productName`, `qty`, `price`, `status`, `indexID`) VALUES (NULL, '$p', '$name', '$qty', '$pp', '$status', '$index')";
-            $qf = mysqli_query($connection,$qry);
+            //
+            $exist = 'e';
+            $checkPrevious = "SELECT `productName` FROM `shopingcart` where `productName`='$name' and `id`='$p'";
+            $queryFireForCheckPrevious = mysqli_query($connection,$checkPrevious);
+            $num = mysqli_num_rows($queryFireForCheckPrevious);
+            if($num>0)
+            {
+                while($product = mysqli_fetch_array($queryFireForCheckPrevious))
+                {
+                    $exist = $product['productName'];
+                }
+            }
+            echo $exist;
+            if($exist == 'e')
+            {
+                $qry = "INSERT INTO `shopingcart` (`cartId`, `id`, `productName`, `qty`, `price`, `status`, `indexID`) VALUES (NULL, '$p', '$name', '$qty', '$pp', '$status', '$index')";
+                $qf = mysqli_query($connection,$qry);
+            }
+            else
+            {
+                $newQty = '';
+                $newPrice = '';
+                $query = "SELECT * FROM `shopingcart` where `productName`='$exist'";
+                $qryfire = mysqli_query($connection,$query);
+                $numm = mysqli_num_rows($qryfire);
+                if($numm>0)
+                {
+                    while($product = mysqli_fetch_array($qryfire))
+                    {
+                        $newQty = $product['qty'];// store previous qty
+                        $newPrice = $product['price'];//store previous price
+                    }
+                    
+                }
+                $totalPrice = intval($newPrice) + intval($price);
+                $totalQty = intval($newQty) + intval($qty);
+                $updateQuery = "update `shopingcart` set `price`= '$totalPrice' , `qty`= '$totalQty' where `productName`='$exist'";
+                $queryFire = mysqli_query($connection,$updateQuery);
+            }
+            //
+            //$qry = "INSERT INTO `shopingcart` (`cartId`, `id`, `productName`, `qty`, `price`, `status`, `indexID`) VALUES (NULL, '$p', '$name', '$qty', '$pp', '$status', '$index')";
+            //$qf = mysqli_query($connection,$qry);
             
         }
     }

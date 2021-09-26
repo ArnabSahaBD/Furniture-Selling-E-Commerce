@@ -43,10 +43,32 @@
                 $error = 'e';
             }
         }
+        if($error == 'e')
+        {
+            echo '<script>alert("Fill up properly")</script>';
+        }
         if($error == '')
         {
-            $qry = "INSERT INTO `registration` (`id`, `userID`, `password`, `email`) VALUES (NULL, '$userID', '$password2', '$email')";
-            $queryFire = mysqli_query($connection,$qry);
+            $checkUserID = '';
+            $checkUserID = "SELECT `userID` FROM `registration` where `userID`='$userID'";
+            $queryFireForCheckUserID = mysqli_query($connection,$checkUserID);
+            $num = mysqli_num_rows($queryFireForCheckUserID);
+            if($num>0)
+            {
+                while($product = mysqli_fetch_array($queryFireForCheckUserID))
+                {
+                    $checkUserID = $product['userID'];
+                }
+            }
+            if($checkUserID == $userID)
+            {
+                echo '<script>alert("UserID already exist")</script>';
+            }
+            else
+            {
+                $qry = "INSERT INTO `registration` (`id`, `userID`, `password`, `email`) VALUES (NULL, '$userID', '$password2', '$email')";
+                $queryFire = mysqli_query($connection,$qry);
+            }
         }
         
         

@@ -58,6 +58,11 @@
                 header("location: index.php");
             }
         }
+        if($error=='e')
+        {
+            echo '<script>alert("Give user id and password")</script>';
+        }
+            
         
     }
 ?>

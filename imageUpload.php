@@ -42,10 +42,15 @@
         {
             $price  = clean_text($_POST["product_price"]);
         }
-    }
-    $connection = mysqli_connect('localhost','root');
+         $connection = mysqli_connect('localhost','root');
     mysqli_select_db($connection,'Furniturebd');
-    $query = "SELECT productId FROM `product` where name = '$categoryName'";
+    if($error == 'e')
+    {
+        echo '<script>alert("Fill up the all informations")</script>';
+    }
+    else
+    {
+        $query = "SELECT productId FROM `product` where name = '$categoryName'";
     $queryfire = mysqli_query($connection,$query);
     $p = '';
         $num = mysqli_num_rows($queryfire);
@@ -89,6 +94,9 @@
         
     }
 
+    }
+    }
+   
 ?>
 <!doctype html>
 <html lang="en">
